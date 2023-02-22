@@ -12,11 +12,17 @@ spring:
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user/**
+          filters:
+            - RewritePath=/user/?(?<segment>.*), /$\{segment}
+            - AddRequestHeader=token, 1234
+            - AddResponseHeader=authenticated, yes
 
         - id: order-service
           uri: lb://ORDER-SERVICE
           predicates:
             - Path=/order/**
+          filter:
+            - RewritePath=/order/?(?<segment>.*), /$\{segment}
 
 eureka:
   client:
